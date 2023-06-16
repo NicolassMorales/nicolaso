@@ -13,14 +13,14 @@ df = pd.read_excel("policereports.xlsx")
 st.sidebar.header("Filters: ")
 day = st.sidebar.multiselect(
     "Day:",
-    options=df["Incident Day"].unique(),
-    default=df["Incident Day"].unique()
+    options=df["Incident Day of Week"].unique(),
+    default=df["Incident Day of Week"].unique()
 )
 
 district = st.sidebar.multiselect(
     "District:",
-    options=df["District"].unique(),
-    default=df["District"].unique()
+    options=df["Police District"].unique(),
+    default=df["Police District"].unique()
 )
 
 category = st.sidebar.multiselect(
@@ -30,7 +30,7 @@ category = st.sidebar.multiselect(
 )
 
 df_selection = df.query(
-    "`Incident Day` == @day and `District` == @district and `Incident Category` == @category"
+    "`Incident Day of Week` == @day and `Police District` == @district and `Incident Category` == @category"
 )
 
 st.dataframe(df_selection)
@@ -42,13 +42,13 @@ st.title("Police Reports Indexes :police_car:")
 st.markdown("---")
 
 # TOP KPI´s
-conteo_district = df_selection['District'].value_counts()
+conteo_district = df_selection['Police District'].value_counts()
 
-porcentaje = conteo_district/len(df['District']) * 100
+porcentaje = conteo_district/len(df['Police District']) * 100
 
-conteo_dia = df_selection['Incident Day'].value_counts()
+conteo_dia = df_selection['Incident Day of Week'].value_counts()
 
-porcentaje2 = conteo_dia/len(df['Incident Day']) * 100
+porcentaje2 = conteo_dia/len(df['Incident Day of Week']) * 100
 
 first_column, second_column, third_column, fourth_column = st.columns(4)
 
@@ -73,12 +73,12 @@ st.markdown("---")
 # ---- Robberies per day ----
 
 robberies_per_day = (
-    df_selection.groupby('Incident Day').size().reset_index(name='Total').sort_values(by="Total")
+    df_selection.groupby('Incident Day of Week').size().reset_index(name='Total').sort_values(by="Total")
 )
 fig_robberies_per_day = px.bar(
     robberies_per_day,
     x="Total",
-    y="Incident Day",
+    y="Incident Day of Week",
     orientation="h",
     title="<b>Robberies per day</b>",
     color_discrete_sequence=["#EF280F"] * len(robberies_per_day),
